@@ -85,16 +85,20 @@ app.post('/api/login', async (req, res, next) =>
     let un = '';
     let error = '';
     const {username, password} = req.body;
-    try {
+    try 
+    {
+    
         await client.connect();
         const db = client.db('POOSD-Large-Project');
 
         const user = await db.collection('User').find({Username: username, Password: password}).toArray();
-        if (user.length > 0) {
+        if (user.length > 0)
+        {
             id = user[0]._id.toString();
             un = user[0].Username;
             res.status(200).json({ id, Username: un, error: '' });
-        } else {
+        } else
+        {
             error = 'Invalid username or password';
             res.status(400).json({ id, Username: un, error });
         }
@@ -114,9 +118,13 @@ app.post('/api/getPublicSets', async (req, res, next) =>
   var error = '';
 
   const { nameSearch = '', topicSearch = '' } = req.body; // Default to empty strings if not provided
-  const db = client.db("POOSD-Large-Project");
   
-  try {
+  try 
+  { 
+    await client.connect();
+
+    const db = client.db("POOSD-Large-Project");
+
     const results = await db.collection('CardSet').find(
     {
         Published: true,
@@ -146,7 +154,8 @@ app.post('/api/getPublicSets', async (req, res, next) =>
 
 });
 
-app.post('/api/createCardSet', async (req, res) => {
+app.post('/api/createCardSet', async (req, res) =>
+{
   // incoming: Name, Topic, UserId, Published
   // outgoing: success, error
   
@@ -163,7 +172,8 @@ app.post('/api/createCardSet', async (req, res) => {
   var ObjectId = require('mongodb').ObjectId;
   userId = new ObjectId(UserId)
 
-  try {
+  try
+  {
       await client.connect();
       const db = client.db("POOSD-Large-Project"); // Replace with your database name
         
@@ -243,7 +253,8 @@ app.post('/api/updateCardSet', async (req, res) =>
   }
 });
 
-app.post('/api/deleteCardSet', async (req, res) => {
+app.post('/api/deleteCardSet', async (req, res) => 
+{
   const { id } = req.body; // Expecting id of the CardSet to delete
 
 
@@ -288,10 +299,12 @@ app.post('/api/deleteCardSet', async (req, res) => {
         message: "CardSet deleted successfully",
         cardsDeleted: deleteCardsResult.deletedCount
     });
-  } catch (error) {
+    } catch (error)
+    {
       console.error("Error deleting card set:", error);
       res.status(500).json({ success: false, error: "Failed to delete card set" });
-  } finally {
+    } finally 
+    {
       await client.close();
-  }
+    }
 });
